@@ -1,0 +1,9 @@
+gradio
+Flask
+fitz
+pymupdf==1.20.2
+PyPDF2
+Pillow
+scipy
+ultralytics~=8.0.20
+psycopg2
