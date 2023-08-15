@@ -42,6 +42,7 @@ def create_tables(cursor):
             age TEXT,
             sex TEXT,
             file_name TEXT,
+            status TEXT,
             page TEXT
         )
     ''')
@@ -101,9 +102,9 @@ def insert_json(json_file):
     for electorate_entry in electorate_data:
         cursor.execute('''
             INSERT INTO electorate (
-                voter_id, name, name2, type_name2, house_no, age, sex, file_name
+                voter_id, name, name2, type_name2, house_no, age, sex, status, file_name
             ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s
+                %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
         ''', (
             electorate_entry['id'],
@@ -113,6 +114,7 @@ def insert_json(json_file):
             electorate_entry['house_no'],
             electorate_entry['age'],
             electorate_entry['sex'],
+            electorate_entry['status'],
             json_file.replace(".json", ".pdf")
         ))
 
@@ -134,11 +136,11 @@ def insert_csv(csv_file):
         reader = csv.DictReader(f)
         for row in reader:
             cursor.execute('''
-                INSERT INTO electorate (page, voter_id, name, name2, type_name2, house_no, age, sex, file_name)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO electorate (page, voter_id, name, name2, type_name2, house_no, age, sex, status, file_name)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ''', (
                 row['page'], row['id'], row['name'], row['name2'], row['type_name2'],
-                row['house_no'], row['age'], row['sex'], csv_file.replace(".csv", ".pdf")
+                row['house_no'], row['age'], row['sex'], row['status'], csv_file.replace(".csv", ".pdf")
             ))
 
     # Commit the changes and close the connection

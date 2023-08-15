@@ -19,7 +19,7 @@ ocr = PaddleOCR(debug=False, use_angle_cls=True, lang='en',
 
 def save_to_csv_and_json(info_detail, page, path, file_name_csv, file_name_json):
 
-    csv_header = ["page", "id", "name", "name2", "type_name2", "house_no", "age", "sex"]
+    csv_header = ["page", "id", "name", "name2", "type_name2", "house_no", "age", "sex", "status"]
 
     csv_file_path = os.path.join(path, file_name_csv)
     json_file_path = os.path.join(path, file_name_json)
@@ -46,8 +46,32 @@ def save_to_csv_and_json(info_detail, page, path, file_name_csv, file_name_json)
     with open(json_file_path, "w") as jsonfile:
         json.dump(data, jsonfile, indent=4)
 
+def txt_vald_append(text):
+    valid_array = ["Photo is", "Available",
+                   "photois", "available"]
+    cleaned_input = text.replace("'", "").replace(" ", "").lower()
+    if cleaned_input in valid_array:
+        return False
+    if text.strip() in valid_array:
+        return False
+    return True
 
-def ocrImg(img_path, f, pathOutput, pdf_file, page_number):
+def replace_txts(text):
+    text = text.replace("House Number : \n", "House Number : ").replace("Age : \n", "Age : ").replace("\n Gender", "Gender").replace("Gender : \n", "Gender : ")
+    text = text.replace("House Number :\n", "House Number : ").replace("Age:\n", "Age : ").replace("\nGender", " Gender").replace("Gender :\n", "Gender : ")
+    text = text.replace("House Number: \n", "House Number: ").replace("Age: \n", "Age: ").replace("Gender :\n", "Gender :")
+    text = text.replace("House Number:\n", "House Number : ").replace("Age:\n", "Age : ").replace("Gender:\n", "Gender :")
+    text = text.replace("House Number\n", "House Number : ").replace("Age\n", "Age : ").replace("Gender\n", "Gender :")
+    return text
+
+def format_age_gender(input_string):
+    regex_pattern = r'Age(\d+)Gender'
+
+    formatted_string = re.sub(regex_pattern, r'Age : \1 Gender', input_string)
+
+    return formatted_string
+
+def ocrImg(img_path, pathOutput, pdf_file, page_number):
     page = page_number
     csv_file = pdf_file.replace('.pdf', ".csv")
     json_file = pdf_file.replace('.pdf', ".json")
@@ -58,12 +82,18 @@ def ocrImg(img_path, f, pathOutput, pdf_file, page_number):
     txts = [line[1][0] for line in result]
 
     for txt in txts:
-        text = text + txt + "\n"
+        if txt_vald_append(txt):
+            if "Age" in txt and "Gender" in txt:
+                text = format_age_gender(text)
+                text = text + txt + "\n"
+            else:
+                text = text + txt + "\n"
+    text = replace_txts(text)
     infoDetail = info_detail.extract_info_from_ocr(text)
     print(infoDetail)
     save_to_csv_and_json(infoDetail, page, pathOutput, csv_file, json_file)
 
-def ocrImgDelete(img_path, f, pathOutput, pdf_file, page_number):
+def ocrImgDelete(img_path, pathOutput, pdf_file, page_number):
     page = page_number
     csv_file = pdf_file.replace('.pdf', ".csv")
     json_file = pdf_file.replace('.pdf', ".json")
@@ -73,7 +103,9 @@ def ocrImgDelete(img_path, f, pathOutput, pdf_file, page_number):
 
     txts = [line[1][0] for line in result]
     for txt in txts:
-        text = text + txt + "\n"
+        if txt_vald_append(txt):
+            text = text + txt + "\n"
+    text = replace_txts(text)
     infoDetail = info_detail.extract_info_from_ocr_delete(text)
     print(infoDetail)
     save_to_csv_and_json(infoDetail, page, pathOutput, csv_file, json_file)
@@ -92,7 +124,7 @@ def ocrcardname(pdf_file, page_number):
         for f in listdir(pathExtract):
             create_directory_if_not_exists(pathOutput)
             print(join(pathExtract, f))
-            ocrImg(join(pathExtract, f), f,pathOutput, pdf_file, page_number)
+            ocrImg(join(pathExtract, f), pathOutput, pdf_file, page_number)
 
 def ocrcardnameDelete(pdf_file, page_number):
     pathExtract = "cardimage/detect/crops/carddelete"
@@ -101,7 +133,7 @@ def ocrcardnameDelete(pdf_file, page_number):
         for f in listdir(pathExtract):
             create_directory_if_not_exists(pathOutput)
             print(join(pathExtract, f))
-            ocrImgDelete(join(pathExtract, f), f,pathOutput, pdf_file, page_number)
+            ocrImgDelete(join(pathExtract, f), pathOutput, pdf_file, page_number)
 
 def find_index_ignore_case(lst, item):
     lower_item = item.lower()  # Convert the item to lowercase

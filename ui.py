@@ -8,7 +8,7 @@ import shutil
 import file_name_utils
 import pdf_extract
 import zipfile
-import insert_database
+# import insert_database
 
 def flip_text(x):
     return x[::-1]
@@ -67,8 +67,8 @@ def upload_file_json(files):
     copy_cache_to_upload(files)
 
     json_files = [file for file in os.listdir(file_name_utils.UPLOAD_FOLDER) if file.endswith(".json")]
-    for json_file in json_files:
-        insert_database.insert_json(json_file)
+    # for json_file in json_files:
+    #     insert_database.insert_json(json_file)
     sleep(2)
 
     return "done!"
@@ -80,8 +80,8 @@ def upload_file_csv(files):
     copy_cache_to_upload(files)
 
     csv_files = [file for file in os.listdir(file_name_utils.UPLOAD_FOLDER) if file.endswith(".csv")]
-    for csv_file in csv_files:
-        insert_database.insert_csv(csv_file)
+    # for csv_file in csv_files:
+    #     insert_database.insert_csv(csv_file)
     sleep(2)
 
     return "done!"
@@ -106,4 +106,4 @@ with gr.Blocks() as documentOCR:
         gr.Markdown("2. Upload json or csv to insert database")
 
 
-documentOCR.queue().launch(share=False)
+documentOCR.queue().launch(share=False, server_name="0.0.0.0")
