@@ -11,6 +11,7 @@ model = YOLO('model/best.pt')
 
 path_cardname = file_name_utils.CARDNAME_FOLDER
 def cropbox():
+
     sleep(0.3)
     for filename in os.listdir(path_cardname):
         file_path = os.path.join(path_cardname, filename)
@@ -22,6 +23,7 @@ def cropbox():
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
     sleep(0.3)
+
     results = model.predict('tmppdf',
                             project=path_cardname, name='detect',
                             save=True,

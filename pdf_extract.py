@@ -5,7 +5,7 @@ from PyPDF2 import PdfReader
 import gpu_box
 import gpu_ocr
 
-zoom = 2  # zoom factor
+zoom = 1  # zoom factor
 mat = fitz.Matrix(zoom, zoom)
 
 
@@ -25,7 +25,7 @@ def convert_pdf_to_images(input_folder, output_folder, tmp_folder, first_folder_
         pdf_document = fitz.open(pdf_path)
         # num_pages = pdf_document.page_count()
         page = pdf_document.load_page(0)
-        image = page.get_pixmap(matrix=mat, dpi=150)
+        image = page.get_pixmap(matrix=mat, dpi=300)
 
         image_path = os.path.join(first_folder_path, f"{pdf_file}_page_1.png")
         image.save(image_path)
@@ -34,7 +34,7 @@ def convert_pdf_to_images(input_folder, output_folder, tmp_folder, first_folder_
         os.remove(image_path)
         for page_number in range(2, num_pages - 1):
             page = pdf_document.load_page(page_number)
-            image = page.get_pixmap(matrix=mat, dpi=150)
+            image = page.get_pixmap(matrix=mat, dpi=300)
 
             image_path = os.path.join(tmp_folder, f"{pdf_file}_page_{page_number + 1}.png")
             print(image_path)

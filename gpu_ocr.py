@@ -13,7 +13,13 @@ import info_detail
 # Paddleocr supports Chinese, English, French, German, Korean and Japanese.
 # You can set the parameter `lang` as `ch`, `en`, `french`, `german`, `korean`, `japan`
 # to switch the language model in order.
-ocr = PaddleOCR(debug=False, use_angle_cls=True, lang='en',
+ocr = PaddleOCR(debug=False,
+                ocr_version='PP-OCRv4',
+                det_model_dir='en_PP-OCRv3_det_infer',
+                rec_model_dir='en_PP-OCRv4_rec_infer',
+                gpu_mem=8192,
+                use_angle_cls=True,
+                lang='en',
                 use_gpu=True) # need to run only once to download and load model into memory
 
 
@@ -57,11 +63,34 @@ def txt_vald_append(text):
     return True
 
 def replace_txts(text):
+    text = text.replace("Namme", "Name")
+    text = text.replace("NamMe", "Name")
+    text = text.replace("NaMe", "Name")
+    for i in range(0, 10):
+        text = text.replace("UD " + str(i), "UDI" + str(i))
+        text = text.replace("UD" + str(i), "UDI" + str(i))
+        text = text.replace("D " + str(i), "DI" + str(i))
+        text = text.replace("DI" + str(i), "UDI" + str(i))
+        text = text.replace("UUDI" + str(i), "UDI" + str(i))
+
+    for i in range(0, 10):
+        text = text.replace("KW " + str(i), "KWZ" + str(i))
+        text = text.replace("KW" + str(i), "KWZ" + str(i))
+        text = text.replace("W " + str(i), "WZ" + str(i))
+        text = text.replace("WZ" + str(i), "KWZ" + str(i))
+        text = text.replace("KZ" + str(i), "KWZ" + str(i))
+        text = text.replace("KKWZ" + str(i), "KWZ" + str(i))
+
+
+    text = text.replace("Name -", "Name :")
+    text = text.replace("Aqe :", "Age :").replace("Aqe :", "Age :")
+    text = text.replace("Aae :", "Age :").replace("Aae :", "Age :")
     text = text.replace("House Number : \n", "House Number : ").replace("Age : \n", "Age : ").replace("\n Gender", "Gender").replace("Gender : \n", "Gender : ")
     text = text.replace("House Number :\n", "House Number : ").replace("Age:\n", "Age : ").replace("\nGender", " Gender").replace("Gender :\n", "Gender : ")
     text = text.replace("House Number: \n", "House Number: ").replace("Age: \n", "Age: ").replace("Gender :\n", "Gender :")
     text = text.replace("House Number:\n", "House Number : ").replace("Age:\n", "Age : ").replace("Gender:\n", "Gender :")
     text = text.replace("House Number\n", "House Number : ").replace("Age\n", "Age : ").replace("Gender\n", "Gender :")
+
     return text
 
 def format_age_gender(input_string):
@@ -75,21 +104,23 @@ def ocrImg(img_path, pathOutput, pdf_file, page_number):
     page = page_number
     csv_file = pdf_file.replace('.pdf', ".csv")
     json_file = pdf_file.replace('.pdf', ".json")
+
     result = ocr.ocr(img_path, cls=True)
 
     text = ""
-
+    result = result[0]
     txts = [line[1][0] for line in result]
 
     for txt in txts:
         if txt_vald_append(txt):
             if "Age" in txt and "Gender" in txt:
                 text = format_age_gender(text)
-                text = text + txt + "\n"
+                text = text + txt.replace("  ", " ") + "\n"
             else:
-                text = text + txt + "\n"
+                text = text + txt.replace("  ", " ") + "\n"
     text = replace_txts(text)
     infoDetail = info_detail.extract_info_from_ocr(text)
+
     print(infoDetail)
     save_to_csv_and_json(infoDetail, page, pathOutput, csv_file, json_file)
 
@@ -179,7 +210,7 @@ def ocrImgFirst(img_path, filePDF):
         "electorate": []
     }
     result = ocr.ocr(img_path, cls=True)
-
+    result = result[0]
     txts = [line[1][0] for line in result]
     new_list = [item.lower().strip() for item in txts]
     try:
