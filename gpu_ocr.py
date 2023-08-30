@@ -71,7 +71,11 @@ def replace_txts(text):
         text = text.replace("UD" + str(i), "UDI" + str(i))
         text = text.replace("D " + str(i), "DI" + str(i))
         text = text.replace("DI" + str(i), "UDI" + str(i))
+        text = text.replace("UD I" + str(i), "UDI" + str(i))
+        text = text.replace("U D I" + str(i), "UDI" + str(i))
+        text = text.replace("U DI" + str(i), "UDI" + str(i))
         text = text.replace("UUDI" + str(i), "UDI" + str(i))
+        text = text.replace("OUDI" + str(i), "UDI" + str(i))
 
     for i in range(0, 10):
         text = text.replace("KW " + str(i), "KWZ" + str(i))

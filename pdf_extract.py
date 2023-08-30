@@ -1,4 +1,5 @@
 import os
+from time import sleep
 
 import fitz  # PyMuPDF
 from PyPDF2 import PdfReader
@@ -65,6 +66,8 @@ def convert_pdf_to_images(input_folder, output_folder, tmp_folder, first_folder_
                 break
             else:
                 pdf_document.close()
+
+        sleep(1)
 
         os.unlink(os.path.join("fileupload", pdf_file))
 
