@@ -135,7 +135,7 @@ def ocrImgDelete(img_path, pathOutput, pdf_file, page_number):
     result = ocr.ocr(img_path, cls=True)
 
     text = ""
-
+    result = result[0]
     txts = [line[1][0] for line in result]
     for txt in txts:
         if txt_vald_append(txt):

@@ -6,7 +6,7 @@ from PyPDF2 import PdfReader
 import gpu_box
 import gpu_ocr
 
-zoom = 1  # zoom factor
+zoom = 2  # zoom factor
 mat = fitz.Matrix(zoom, zoom)
 
 
