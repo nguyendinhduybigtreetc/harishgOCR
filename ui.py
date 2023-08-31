@@ -10,6 +10,24 @@ import pdf_extract
 import zipfile
 # import insert_database
 
+def create_folder_if_not_exists(folder_path):
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f"Created folder: {folder_path}")
+    else:
+        print(f"Folder already exists: {folder_path}")
+
+input_folder_path = "fileupload"
+output_folder_path = "cardimage"
+tmp_folder_path = "tmppdf"
+first_folder_path = "firstpageimage"
+
+create_folder_if_not_exists(input_folder_path)
+create_folder_if_not_exists(output_folder_path)
+create_folder_if_not_exists(tmp_folder_path)
+create_folder_if_not_exists(first_folder_path)
+
+
 def flip_text(x):
     return x[::-1]
 
