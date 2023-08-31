@@ -1,6 +1,7 @@
 import os
 import shutil
 from time import sleep
+import cv2
 
 from ultralytics import YOLO
 
@@ -33,3 +34,42 @@ def cropbox():
                             line_thickness=1)  # predict on an image
 
     sleep(0.3)
+
+
+def gpuFixSize():
+    directory = 'cardimage/detect/crops/cardname'
+
+    # iterate over files in
+    # that directory
+    if os.path.exists(directory):
+        for filename in os.listdir(directory):
+            f = os.path.join(directory, filename)
+            # checking if it is a file
+            if os.path.isfile(f):
+                img = cv2.imread(f)
+                height, width, channels = img.shape
+                if width > 792:
+                    y = 0
+                    x = width - 792
+                    h = height
+                    w = width
+                    crop_img = img[y:y + h, x:x + w]
+                    cv2.imwrite(f, crop_img)
+
+    directory = 'cardimage/detect/crops/cardnamedelete'
+    if os.path.exists(directory):
+        # iterate over files in
+        # that directory
+        for filename in os.listdir(directory):
+            f = os.path.join(directory, filename)
+            # checking if it is a file
+            if os.path.isfile(f):
+                img = cv2.imread(f)
+                height, width, channels = img.shape
+                if width > 792:
+                    y = 0
+                    x = width - 792
+                    h = height
+                    w = width
+                    crop_img = img[y:y + h, x:x + w]
+                    cv2.imwrite(f, crop_img)

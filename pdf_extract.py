@@ -55,6 +55,7 @@ def convert_pdf_to_images(input_folder, output_folder, tmp_folder, first_folder_
             """
 
             gpu_box.cropbox()
+            gpu_box.gpuFixSize()
             gpu_ocr.ocrcardname(pdf_file, page_number)
             gpu_ocr.ocrcardnameDelete(pdf_file, page_number)
             progress(float((index+1) / len(pdf_files)), desc="scan: " + pdf_file)

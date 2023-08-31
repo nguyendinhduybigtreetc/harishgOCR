@@ -7,3 +7,4 @@ Pillow
 scipy
 ultralytics~=8.0.20
 psycopg2
+opencv-python

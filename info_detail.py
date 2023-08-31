@@ -8,7 +8,7 @@ def contains_keyword_using_in(string, keyword):
 
 
 def is_dependent_type_in_list(input_string):
-    dependent_types_list = ['fathersname', 'mothersname', 'husbandsname', 'wifesname', 'othersname', 'eathersname']
+    dependent_types_list = ['fathersname', 'mothersname', 'husbandsname', 'wifesname', 'othersname', 'eathersname', 'gurusname']
     cleaned_input = input_string.replace("'", "").lower().replace(" ", "")
 
     return cleaned_input in dependent_types_list
@@ -36,7 +36,7 @@ def extract_info_from_ocr(text):
     }
     gender_err = ""
     i = 1
-    min_id_length = 9
+    min_id_length = 8
     if len(lines) > 3:
         if len(lines[0].replace(" - ", "").replace("-", "").replace(" ", "").strip()) > min_id_length and contains_letters_and_digits(lines[0].strip()):
             info['id'] = lines[0].strip()
@@ -74,9 +74,13 @@ def extract_info_from_ocr(text):
                     info['name2'] = value.strip()
                 else:
                     while ":" not in next_line or not ("House" in next_line or "Number" in next_line):
+
                         value += " " + next_line
                         i += 1
-                        next_line = lines[i + 1].strip() if i + 1 < len(lines) else ''
+                        if i + 1 < len(lines):
+                            next_line = lines[i + 1].strip()
+                        else:
+                            break
                     value = remove_special_characters(value)
                     info['name2'] = value.strip()
 
@@ -114,10 +118,10 @@ def extract_info_from_ocr(text):
                     print(value)
 
         i += 1
-
     return info
 
 def extract_info_from_ocr_delete(text):
+    print(text)
     lines = text.split('\n')
 
     info = {

@@ -53,8 +53,8 @@ def save_to_csv_and_json(info_detail, page, path, file_name_csv, file_name_json)
         json.dump(data, jsonfile, indent=4)
 
 def txt_vald_append(text):
-    valid_array = ["Photo is", "Available",
-                   "photois", "available"]
+    valid_array = ["Photo is", "Available", "Photo"
+                   "photois", "available", "photo"]
     cleaned_input = text.replace("'", "").replace(" ", "").lower()
     if cleaned_input in valid_array:
         return False
@@ -76,17 +76,49 @@ def replace_txts(text):
         text = text.replace("U DI" + str(i), "UDI" + str(i))
         text = text.replace("UUDI" + str(i), "UDI" + str(i))
         text = text.replace("OUDI" + str(i), "UDI" + str(i))
+        text = text.replace("UD|" + str(i), "UDI" + str(i))
+        text = text.replace("UDl" + str(i), "UDI" + str(i))
+        text = text.replace("UDT" + str(i), "UDI" + str(i))
 
     for i in range(0, 10):
         text = text.replace("KW " + str(i), "KWZ" + str(i))
         text = text.replace("KW" + str(i), "KWZ" + str(i))
         text = text.replace("W " + str(i), "WZ" + str(i))
         text = text.replace("WZ" + str(i), "KWZ" + str(i))
+        text = text.replace("MZ" + str(i), "KWZ" + str(i))
         text = text.replace("KZ" + str(i), "KWZ" + str(i))
         text = text.replace("KKWZ" + str(i), "KWZ" + str(i))
 
+    for i in range(0, 10):
+        text = text.replace("TR0" + str(i), "TRO" + str(i))
+        text = text.replace("IR0" + str(i), "TRO" + str(i))
+        text = text.replace("IRO" + str(i), "TRO" + str(i))
 
+    for i in range(0, 10):
+        text = text.replace("IFJ" + str(i), "TFJ" + str(i))
+
+    for i in range(0, 10):
+        text = text.replace("-BH" + str(i), "FBH" + str(i))
+
+    for i in range(0, 10):
+        text = text.replace("ZXE" + str(i), "ZXF" + str(i))
+
+    for i in range(0, 10):
+        text = text.replace("MTE" + str(i), "MTF" + str(i))
+
+    for i in range(0, 10):
+        text = text.replace("IVS" + str(i), "TVS" + str(i))
+
+    for i in range(0, 10):
+        text = text.replace("House Number " + str(i), "House Number : " + str(i))
+
+    text = text.replace(".", ":")
     text = text.replace("Name -", "Name :")
+    text = text.replace("Name ", "Name :")
+    text = text.replace("::", ":")
+    text = text.replace(": :", ":")
+    text = text.replace(":::", ":")
+    text = text.replace("Name Name", "Name")
     text = text.replace("Aqe :", "Age :").replace("Aqe :", "Age :")
     text = text.replace("Aae :", "Age :").replace("Aae :", "Age :")
     text = text.replace("House Number : \n", "House Number : ").replace("Age : \n", "Age : ").replace("\n Gender", "Gender").replace("Gender : \n", "Gender : ")
