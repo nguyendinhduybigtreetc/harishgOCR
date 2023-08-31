@@ -8,7 +8,7 @@ def contains_keyword_using_in(string, keyword):
 
 
 def is_dependent_type_in_list(input_string):
-    dependent_types_list = ['fathersname', 'mothersname', 'husbandsname', 'wifesname', 'othersname', 'eathersname', 'gurusname']
+    dependent_types_list = ['fathersname', 'mothersname', 'husbandsname', 'wifesname', 'othersname', 'eathersname', 'gurusname', "others"]
     cleaned_input = input_string.replace("'", "").lower().replace(" ", "")
 
     return cleaned_input in dependent_types_list
